@@ -2,123 +2,141 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>GCSU MIS Starter Kit</title>
+    <title>Will's Coffee Shop</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gcsu-blue: #003399;
-            --gcsu-green: #006633;
-            --gcsu-light-blue: #e6f2ff;
-            --gcsu-light-green: #e6f7e6;
+            --coffee-brown: #4A2C2A;
+            --coffee-dark: #2C1810;
+            --coffee-medium: #6F4E37;
+            --coffee-light: #A67C52;
+            --cream: #F5E6D3;
+            --latte: #E8D5C4;
+            --espresso: #1A0F0A;
         }
-        
+
         body {
-            background: linear-gradient(135deg, var(--gcsu-light-blue) 0%, #ffffff 50%, var(--gcsu-light-green) 100%);
+            background: linear-gradient(135deg, var(--cream) 0%, #ffffff 50%, var(--latte) 100%);
+            background-attachment: fixed;
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Lato', sans-serif;
+            color: var(--coffee-dark);
         }
-        
-        .navbar-gcsu {
-            background: linear-gradient(90deg, var(--gcsu-blue) 0%, var(--gcsu-green) 100%);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        .navbar-coffee {
+            background: linear-gradient(90deg, var(--coffee-dark) 0%, var(--coffee-brown) 100%);
+            box-shadow: 0 4px 12px rgba(42, 24, 16, 0.3);
             padding: 1rem 0;
         }
-        
+
         .navbar-brand {
-            font-weight: bold;
-            font-size: 1.4rem;
-            color: white !important;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: var(--cream) !important;
+            letter-spacing: 1px;
         }
-        
+
         .navbar-brand:hover {
-            color: #f8f9fa !important;
+            color: var(--latte) !important;
             transform: scale(1.05);
             transition: all 0.3s ease;
         }
-        
+
         .navbar-nav .nav-link {
-            color: rgba(255, 255, 255, 0.9) !important;
+            color: rgba(245, 230, 211, 0.9) !important;
             font-weight: 500;
             margin: 0 0.5rem;
             padding: 0.5rem 1rem !important;
             border-radius: 25px;
             transition: all 0.3s ease;
         }
-        
+
         .navbar-nav .nav-link:hover {
-            color: white !important;
-            background: rgba(255, 255, 255, 0.2);
+            color: var(--cream) !important;
+            background: rgba(166, 124, 82, 0.3);
             transform: translateY(-2px);
         }
-        
+
         .container {
             margin-top: 2rem;
         }
-        
+
         .alert {
             border: none;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
         .alert-danger {
-            background: linear-gradient(45deg, #dc3545, #c82333);
+            background: linear-gradient(45deg, #8B4513, #A0522D);
             color: white;
         }
-        
+
         .alert-success {
-            background: linear-gradient(45deg, var(--gcsu-green), #28a745);
+            background: linear-gradient(45deg, var(--coffee-medium), var(--coffee-light));
             color: white;
         }
-        
+
         .btn-primary {
-            background: linear-gradient(45deg, var(--gcsu-blue), var(--gcsu-green));
+            background: linear-gradient(45deg, var(--coffee-brown), var(--coffee-light));
             border: none;
             border-radius: 25px;
             padding: 0.5rem 1.5rem;
             font-weight: 500;
             transition: all 0.3s ease;
+            color: white;
         }
-        
+
         .btn-primary:hover {
+            background: linear-gradient(45deg, var(--coffee-dark), var(--coffee-brown));
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 51, 153, 0.3);
+            box-shadow: 0 4px 12px rgba(74, 44, 42, 0.4);
         }
-        
+
         .card {
             border: none;
             border-radius: 15px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 6px 20px rgba(74, 44, 42, 0.15);
             transition: transform 0.3s ease;
         }
-        
+
         .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(74, 44, 42, 0.25);
         }
-        
+
         h1, h2, h3 {
-            color: var(--gcsu-blue);
+            font-family: 'Playfair Display', serif;
+            color: var(--coffee-brown);
         }
-        
+
         .table {
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(74, 44, 42, 0.1);
+            background: white;
         }
-        
+
         .table thead th {
-            background: linear-gradient(90deg, var(--gcsu-blue), var(--gcsu-green));
+            background: linear-gradient(90deg, var(--coffee-brown), var(--coffee-light));
             color: white;
             border: none;
             font-weight: 600;
         }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(245, 230, 211, 0.3);
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-gcsu">
+    <nav class="navbar navbar-expand-lg navbar-coffee">
         <a class="navbar-brand" href="{{ url_for('index') }}">
-            <i class="fas fa-home me-2"></i>GCSU MIS Starter Kit
+            <i class="fas fa-coffee me-2"></i>Will's Coffee Shop
         </a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
@@ -128,8 +146,18 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('examples.show_examples') }}">
-                        <i class="fas fa-database me-1"></i>Examples
+                    <a class="nav-link" href="{{ url_for('menu.show_menu') }}">
+                        <i class="fas fa-utensils me-1"></i>Menu Items
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('customers.show_customers') }}">
+                        <i class="fas fa-users me-1"></i>Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('orders.show_orders') }}">
+                        <i class="fas fa-shopping-cart me-1"></i>Orders
                     </a>
                 </li>
             </ul>

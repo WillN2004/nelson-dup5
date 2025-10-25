@@ -15,7 +15,9 @@
       "WebFetch(domain:www.brandcolorcode.com)",
       "Bash(git init:*)",
       "Bash(git remote add:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Read(//var/folders/6v/d369krk13159s9bpq830l2m00000gn/T/TemporaryItems/NSIRD_screencaptureui_if7I6Y/**)",
+      "Read(//var/folders/6v/d369krk13159s9bpq830l2m00000gn/T/TemporaryItems/NSIRD_screencaptureui_RJKq6C/**)"
     ],
     "deny": [],
     "ask": []

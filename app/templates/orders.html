@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Orders</h1>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addOrderModal">
+        Create New Order
+    </button>
+
+    <!-- Table displaying all orders -->
+    <table class="table table-striped mt-4">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total Items</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in all_orders %}
+            {% set order_items = order_details[order.order_id] %}
+            {% set order_total = namespace(value=0) %}
+            {% set total_quantity = namespace(value=0) %}
+            {% for item in order_items %}
+                {% set item_total = item.price * item.quantity %}
+                {% set order_total.value = order_total.value + item_total %}
+                {% set total_quantity.value = total_quantity.value + item.quantity %}
+            {% endfor %}
+            <tr>
+                <td>{{ order.order_id }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>{{ order.date.strftime('%Y-%m-%d %H:%M') if order.date else 'N/A' }}</td>
+                <td>{{ total_quantity.value }} item(s)</td>
+                <td><strong>${{ "%.2f"|format(order_total.value) }}</strong></td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addItemModal{{ order.order_id }}">
+                        Add Item
+                    </button>
+                    <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewOrderModal{{ order.order_id }}">
+                        View Details
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteOrderModal{{ order.order_id }}">
+                        Delete Order
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- All Modals Below -->
+{% for order in all_orders %}
+{% set order_items = order_details[order.order_id] %}
+{% set order_total = namespace(value=0) %}
+{% for item in order_items %}
+    {% set item_total = item.price * item.quantity %}
+    {% set order_total.value = order_total.value + item_total %}
+{% endfor %}
+
+<!-- Add Item to Order Modal -->
+<div class="modal fade" id="addItemModal{{ order.order_id }}" tabindex="-1" aria-labelledby="addItemModalLabel{{ order.order_id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addItemModalLabel{{ order.order_id }}">Add Item to Order #{{ order.order_id }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{{ url_for('orders.add_order_detail', order_id=order.order_id) }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="item_id" class="form-label">Menu Item</label>
+                        <select class="form-select" name="item_id" required>
+                            <option value="">Select an item...</option>
+                            {% for item in all_menu_items %}
+                            <option value="{{ item.item_id }}">{{ item.name }} ({{ item.size }}) - ${{ "%.2f"|format(item.price) }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" name="quantity" min="1" value="1" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Add Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View Order Details Modal -->
+<div class="modal fade" id="viewOrderModal{{ order.order_id }}" tabindex="-1" aria-labelledby="viewOrderModalLabel{{ order.order_id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewOrderModalLabel{{ order.order_id }}">Order #{{ order.order_id }} Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Customer:</strong> {{ order.customer_name }}</p>
+                <p><strong>Date:</strong> {{ order.date.strftime('%Y-%m-%d %H:%M') if order.date else 'N/A' }}</p>
+                <hr>
+                <h6>Order Items:</h6>
+                {% if order_items %}
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order_items %}
+                        <tr>
+                            <td>{{ item.item_name }}</td>
+                            <td>{{ item.size }}</td>
+                            <td>${{ "%.2f"|format(item.price) }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ "%.2f"|format(item.price * item.quantity) }}</td>
+                            <td>
+                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editOrderDetailModal{{ item.order_detail_id }}">
+                                    Edit
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteOrderDetailModal{{ item.order_detail_id }}">
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                            <td colspan="2"><strong>${{ "%.2f"|format(order_total.value) }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">No items in this order yet.</p>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Order Modal -->
+<div class="modal fade" id="deleteOrderModal{{ order.order_id }}" tabindex="-1" aria-labelledby="deleteOrderModalLabel{{ order.order_id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteOrderModalLabel{{ order.order_id }}">Delete Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete order #{{ order.order_id }} for {{ order.customer_name }}? This will also delete all order items.
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{{ url_for('orders.delete_order', order_id=order.order_id) }}">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals for Order Details (Edit/Delete Items) -->
+{% for item in order_items %}
+<!-- Edit Order Detail Modal -->
+<div class="modal fade" id="editOrderDetailModal{{ item.order_detail_id }}" tabindex="-1" aria-labelledby="editOrderDetailModalLabel{{ item.order_detail_id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editOrderDetailModalLabel{{ item.order_detail_id }}">Edit Order Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{{ url_for('orders.update_order_detail', order_detail_id=item.order_detail_id) }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="item_id" class="form-label">Menu Item</label>
+                        <select class="form-select" name="item_id" required>
+                            {% for menu_item in all_menu_items %}
+                            <option value="{{ menu_item.item_id }}" {% if menu_item.item_id == item.item_id %}selected{% endif %}>
+                                {{ menu_item.name }} ({{ menu_item.size }}) - ${{ "%.2f"|format(menu_item.price) }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" name="quantity" min="1" value="{{ item.quantity }}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Order Detail Modal -->
+<div class="modal fade" id="deleteOrderDetailModal{{ item.order_detail_id }}" tabindex="-1" aria-labelledby="deleteOrderDetailModalLabel{{ item.order_detail_id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteOrderDetailModalLabel{{ item.order_detail_id }}">Remove Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove {{ item.item_name }} ({{ item.size }}) from this order?
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{{ url_for('orders.delete_order_detail', order_detail_id=item.order_detail_id) }}">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endfor %}
+
+<!-- Add New Order Modal -->
+<div class="modal fade" id="addOrderModal" tabindex="-1" aria-labelledby="addOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addOrderModalLabel">Create New Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{{ url_for('orders.show_orders') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="customer" class="form-label">Customer</label>
+                        <select class="form-select" name="customer" required>
+                            <option value="">Select a customer...</option>
+                            {% for customer in all_customers %}
+                            <option value="{{ customer.customer_id }}">{{ customer.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <p class="text-muted small">Note: After creating the order, you can add items to it.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
