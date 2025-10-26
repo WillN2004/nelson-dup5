@@ -32,9 +32,9 @@
             <tr>
                 <td>{{ order.order_id }}</td>
                 <td>{{ order.customer_name }}</td>
-                <td>{{ order.date.strftime('%Y-%m-%d %H:%M') if order.date else 'N/A' }}</td>
+                <td>{{ order.date.strftime('%Y-%m-%d') if order.date else 'N/A' }}</td>
                 <td>{{ total_quantity.value }} item(s)</td>
-                <td><strong>${{ "%.2f"|format(order_total.value) }}</strong></td>
+                <td><strong>${{ "%.2f"|format(order_total.value|float * 1.07) }}</strong></td>
                 <td>
                     <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addItemModal{{ order.order_id }}">
                         Add Item
@@ -104,7 +104,7 @@
             </div>
             <div class="modal-body">
                 <p><strong>Customer:</strong> {{ order.customer_name }}</p>
-                <p><strong>Date:</strong> {{ order.date.strftime('%Y-%m-%d %H:%M') if order.date else 'N/A' }}</p>
+                <p><strong>Date:</strong> {{ order.date.strftime('%Y-%m-%d') if order.date else 'N/A' }}</p>
                 <hr>
                 <h6>Order Items:</h6>
                 {% if order_items %}
@@ -138,8 +138,16 @@
                         </tr>
                         {% endfor %}
                         <tr>
-                            <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                            <td colspan="4" class="text-end"><strong>Subtotal:</strong></td>
                             <td colspan="2"><strong>${{ "%.2f"|format(order_total.value) }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-end"><strong>Tax (7%):</strong></td>
+                            <td colspan="2"><strong>${{ "%.2f"|format(order_total.value|float * 0.07) }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                            <td colspan="2"><strong>${{ "%.2f"|format(order_total.value|float * 1.07) }}</strong></td>
                         </tr>
                     </tbody>
                 </table>

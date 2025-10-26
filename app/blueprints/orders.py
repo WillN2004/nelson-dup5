@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.db_connect import get_db
+from app.blueprints.auth import login_required
 
 orders = Blueprint('orders', __name__)
 
 @orders.route('/', methods=['GET', 'POST'])
+@login_required
 def show_orders():
     db = get_db()
     cursor = db.cursor()
@@ -57,6 +59,7 @@ def show_orders():
                          all_menu_items=all_menu_items)
 
 @orders.route('/delete_order/<int:order_id>', methods=['POST'])
+@login_required
 def delete_order(order_id):
     db = get_db()
     cursor = db.cursor()
@@ -72,6 +75,7 @@ def delete_order(order_id):
     return redirect(url_for('orders.show_orders'))
 
 @orders.route('/add_order_detail/<int:order_id>', methods=['POST'])
+@login_required
 def add_order_detail(order_id):
     db = get_db()
     cursor = db.cursor()
@@ -88,6 +92,7 @@ def add_order_detail(order_id):
     return redirect(url_for('orders.show_orders'))
 
 @orders.route('/update_order_detail/<int:order_detail_id>', methods=['POST'])
+@login_required
 def update_order_detail(order_detail_id):
     db = get_db()
     cursor = db.cursor()
@@ -103,6 +108,7 @@ def update_order_detail(order_detail_id):
     return redirect(url_for('orders.show_orders'))
 
 @orders.route('/delete_order_detail/<int:order_detail_id>', methods=['POST'])
+@login_required
 def delete_order_detail(order_detail_id):
     db = get_db()
     cursor = db.cursor()

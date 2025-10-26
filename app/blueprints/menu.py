@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.db_connect import get_db
+from app.blueprints.auth import login_required
 
 menu = Blueprint('menu', __name__)
 
 @menu.route('/', methods=['GET', 'POST'])
+@login_required
 def show_menu():
     db = get_db()
     cursor = db.cursor()
@@ -29,6 +31,7 @@ def show_menu():
     return render_template('menu.html', all_menu_items=all_menu_items)
 
 @menu.route('/update_menu/<int:item_id>', methods=['POST'])
+@login_required
 def update_menu(item_id):
     db = get_db()
     cursor = db.cursor()
@@ -47,6 +50,7 @@ def update_menu(item_id):
     return redirect(url_for('menu.show_menu'))
 
 @menu.route('/delete_menu/<int:item_id>', methods=['POST'])
+@login_required
 def delete_menu(item_id):
     db = get_db()
     cursor = db.cursor()

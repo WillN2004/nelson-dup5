@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Dashboard</h1>
+            <p class="lead">Welcome back, {{ session.full_name }}!</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mt-4">
+        <div class="col-md-4 mb-4">
+            <div class="card stats-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-dollar-sign fa-3x mb-3" style="color: #28a745;"></i>
+                    <h5 class="card-title text-muted">Total Sales (2025)</h5>
+                    <h2 class="mb-0" style="color: var(--coffee-brown);">${{ "%.2f"|format(total_sales|float * 1.07) }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card stats-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-users fa-3x mb-3" style="color: var(--coffee-medium);"></i>
+                    <h5 class="card-title text-muted">Total Customers</h5>
+                    <h2 class="mb-0" style="color: var(--coffee-brown);">{{ customer_count }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card stats-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-shopping-cart fa-3x mb-3" style="color: var(--coffee-light);"></i>
+                    <h5 class="card-title text-muted">Recent Orders</h5>
+                    <h2 class="mb-0" style="color: var(--coffee-brown);">{{ recent_orders|length }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-clock me-2"></i>Most Recent Orders
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if recent_orders %}
+                                    {% for order in recent_orders %}
+                                    <tr>
+                                        <td>#{{ order.order_id }}</td>
+                                        <td>{{ order.customer_name }}</td>
+                                        <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>{{ order.item_count }}</td>
+                                        <td>${{ "%.2f"|format(order.total_amount|float * 1.07) }}</td>
+                                        <td>
+                                            <a href="{{ url_for('orders.show_orders') }}" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">No orders found</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row mt-4">
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-utensils fa-4x mb-3" style="color: var(--coffee-brown);"></i>
+                    <h5 class="card-title">Menu Items</h5>
+                    <p class="card-text text-muted">Manage your coffee and food menu</p>
+                    <a href="{{ url_for('menu.show_menu') }}" class="btn btn-primary btn-lg w-100">
+                        <i class="fas fa-arrow-right me-2"></i>View Menu
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-users fa-4x mb-3" style="color: var(--coffee-medium);"></i>
+                    <h5 class="card-title">Customers</h5>
+                    <p class="card-text text-muted">View and manage customer information</p>
+                    <a href="{{ url_for('customers.show_customers') }}" class="btn btn-primary btn-lg w-100">
+                        <i class="fas fa-arrow-right me-2"></i>View Customers
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-shopping-cart fa-4x mb-3" style="color: var(--coffee-light);"></i>
+                    <h5 class="card-title">Orders</h5>
+                    <p class="card-text text-muted">Process and manage customer orders</p>
+                    <a href="{{ url_for('orders.show_orders') }}" class="btn btn-primary btn-lg w-100">
+                        <i class="fas fa-arrow-right me-2"></i>View Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-info-circle me-2"></i>Quick Start Guide
+                    </h5>
+                    <ul class="mb-0">
+                        <li><strong>Menu Items:</strong> Add, edit, or remove items from your coffee shop menu</li>
+                        <li><strong>Customers:</strong> Manage customer information and contact details</li>
+                        <li><strong>Orders:</strong> Create new orders, add items, and track order details</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stats-card {
+        border-left: 4px solid var(--coffee-brown);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(74, 44, 42, 0.2);
+    }
+
+    .dashboard-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(74, 44, 42, 0.2);
+    }
+
+    .dashboard-card .btn {
+        transition: all 0.3s ease;
+    }
+
+    .dashboard-card .btn:hover {
+        transform: scale(1.05);
+    }
+</style>
+{% endblock %}

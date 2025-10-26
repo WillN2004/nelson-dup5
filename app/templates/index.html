@@ -1,85 +1,98 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Left side - Coffee Shop Info -->
+        <div class="col-lg-6 mb-4">
+            <h1 class="display-4 mb-4">
+                <i class="fas fa-coffee me-3" style="color: var(--coffee-brown);"></i>Will's Coffee Shop
+            </h1>
+            <p class="lead mb-4">Artisan Coffee & Fresh Pastries</p>
 
-<div class="text-center">
-    <div class="card shadow-lg p-5 mb-5">
-        <h1 class="display-3 mb-3">
-            <i class="fas fa-coffee me-3" style="color: var(--coffee-brown);"></i>Will's Coffee Shop
-        </h1>
-        <h2 class="h4 mb-4" style="color: var(--coffee-medium); font-family: 'Lato', sans-serif; font-weight: 300;">Artisan Coffee & Fresh Pastries</h2>
+            <p class="mb-3">Welcome to Will's Coffee Shop, where every cup is crafted with passion and every customer becomes family. Experience the perfect blend of quality, comfort, and community.</p>
 
-        <p class="lead mb-4">Welcome to Will's Coffee Shop, where every cup is crafted with passion and every customer becomes family. Experience the perfect blend of quality, comfort, and community.</p>
-
-        <div class="row justify-content-center mb-4">
-            <div class="col-md-10">
-                <p class="mb-0" style="font-style: italic; color: var(--coffee-medium);">From our signature espresso blends to handcrafted lattes and fresh-baked goods, we're committed to serving you the finest coffee experience. Join us for your daily ritual.</p>
-            </div>
-        </div>
-
-        <div class="row justify-content-center">
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-mug-hot fa-3x mb-3" style="color: var(--coffee-brown);"></i>
-                        <h5 class="card-title">Premium Coffee</h5>
-                        <p class="card-text">Ethically sourced beans, expertly roasted, and perfectly brewed for your enjoyment.</p>
+            <div class="row mt-4">
+                <div class="col-md-6 mb-3">
+                    <div class="feature-box p-3">
+                        <i class="fas fa-mug-hot fa-2x mb-2" style="color: var(--coffee-brown);"></i>
+                        <h5>Premium Coffee</h5>
+                        <p class="mb-0 small">Ethically sourced beans, expertly roasted</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-cookie-bite fa-3x mb-3" style="color: var(--coffee-light);"></i>
-                        <h5 class="card-title">Fresh Pastries</h5>
-                        <p class="card-text">Baked daily with love, from croissants to muffins and seasonal specialties.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-heart fa-3x mb-3" style="color: var(--coffee-medium);"></i>
-                        <h5 class="card-title">Cozy Atmosphere</h5>
-                        <p class="card-text">A warm and welcoming space perfect for work, study, or catching up with friends.</p>
+                <div class="col-md-6 mb-3">
+                    <div class="feature-box p-3">
+                        <i class="fas fa-cookie-bite fa-2x mb-2" style="color: var(--coffee-light);"></i>
+                        <h5>Fresh Pastries</h5>
+                        <p class="mb-0 small">Baked daily with love</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="mt-4">
-            <a href="{{ url_for('menu.show_menu') }}" class="btn btn-primary btn-lg me-3">
-                <i class="fas fa-book-open me-2"></i>View Our Menu
-            </a>
-            <a href="{{ url_for('orders.show_orders') }}" class="btn btn-outline-coffee btn-lg">
-                <i class="fas fa-shopping-cart me-2"></i>Place an Order
-            </a>
+        <!-- Right side - Login Form -->
+        <div class="col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-lock fa-3x mb-3" style="color: var(--coffee-brown);"></i>
+                        <h3>Employee Login</h3>
+                        <p class="text-muted">Sign in to access the management system</p>
+                    </div>
+
+                    <form method="post" action="{{ url_for('index') }}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="fas fa-user me-2"></i>Username
+                            </label>
+                            <input type="text" class="form-control" id="username" name="username" required autofocus>
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Log In
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center text-muted small">
+                        <p class="mb-1">Demo Account:</p>
+                        <p class="mb-0">Username: <code>willnelson</code> | Password: <code>hashed_password_1</code></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
+    .feature-box {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .feature-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(74, 44, 42, 0.15);
+    }
+
+    .form-control:focus {
+        border-color: var(--coffee-light);
+        box-shadow: 0 0 0 0.2rem rgba(166, 124, 82, 0.25);
+    }
+
     .card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-    }
-
-    .btn-outline-coffee {
-        border: 2px solid var(--coffee-brown);
-        color: var(--coffee-brown);
-        border-radius: 25px;
-        padding: 0.5rem 1.5rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .btn-outline-coffee:hover {
-        background-color: var(--coffee-brown);
-        border-color: var(--coffee-brown);
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(74, 44, 42, 0.4);
+        border: none;
+        background: rgba(255, 255, 255, 0.98);
     }
 </style>
-
 {% endblock %}

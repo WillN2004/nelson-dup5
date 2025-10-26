@@ -135,32 +135,58 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-coffee">
-        <a class="navbar-brand" href="{{ url_for('index') }}">
-            <i class="fas fa-coffee me-2"></i>Will's Coffee Shop
-        </a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('about') }}">
-                        <i class="fas fa-info-circle me-1"></i>About
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('menu.show_menu') }}">
-                        <i class="fas fa-utensils me-1"></i>Menu Items
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('customers.show_customers') }}">
-                        <i class="fas fa-users me-1"></i>Customers
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('orders.show_orders') }}">
-                        <i class="fas fa-shopping-cart me-1"></i>Orders
-                    </a>
-                </li>
-            </ul>
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-coffee me-2"></i>Will's Coffee Shop
+            </a>
+            <div class="collapse navbar-collapse">
+                {% if session.user_id %}
+                <!-- Navigation for LOGGED IN users -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}">
+                            <i class="fas fa-home me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('menu.show_menu') }}">
+                            <i class="fas fa-utensils me-1"></i>Menu Items
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('customers.show_customers') }}">
+                            <i class="fas fa-users me-1"></i>Customers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('orders.show_orders') }}">
+                            <i class="fas fa-shopping-cart me-1"></i>Orders
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#userInfoModal">
+                            <i class="fas fa-user me-1"></i>{{ session.full_name }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+                {% else %}
+                <!-- Navigation for LOGGED OUT users -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">
+                            <i class="fas fa-info-circle me-1"></i>About
+                        </a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
         </div>
     </nav>
 
@@ -179,6 +205,93 @@
         
         {% block content %}{% endblock %}
     </div>
+
+    <!-- User Info Modal -->
+    {% if session.user_id %}
+    <div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(90deg, var(--coffee-dark) 0%, var(--coffee-brown) 100%); color: white;">
+                    <h5 class="modal-title" id="userInfoModalLabel">
+                        <i class="fas fa-user-circle me-2"></i>Employee Information
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-circle fa-5x" style="color: var(--coffee-brown);"></i>
+                    </div>
+                    <table class="table table-borderless">
+                        <tr>
+                            <td class="text-muted"><strong>Name:</strong></td>
+                            <td>{{ session.full_name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted"><strong>Username:</strong></td>
+                            <td>{{ session.username }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted"><strong>Employee ID:</strong></td>
+                            <td>#{{ session.user_id }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted"><strong>Role:</strong></td>
+                            <td>
+                                {% if session.username == 'willnelson' %}
+                                    <span class="badge bg-success">Administrator</span>
+                                {% else %}
+                                    <span class="badge bg-primary">Employee</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">
+                        <i class="fas fa-sign-out-alt me-1"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <footer class="footer mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 style="color: var(--coffee-brown);">
+                        <i class="fas fa-coffee me-2"></i>Will's Coffee Shop
+                    </h5>
+                    <p class="text-muted small mb-0">Serving quality coffee and fresh pastries since 2025</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h6 style="color: var(--coffee-brown);">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        {% if session.user_id %}
+                        <li><a href="{{ url_for('dashboard') }}" class="text-muted text-decoration-none">Dashboard</a></li>
+                        <li><a href="{{ url_for('menu.show_menu') }}" class="text-muted text-decoration-none">Menu Items</a></li>
+                        <li><a href="{{ url_for('customers.show_customers') }}" class="text-muted text-decoration-none">Customers</a></li>
+                        <li><a href="{{ url_for('orders.show_orders') }}" class="text-muted text-decoration-none">Orders</a></li>
+                        {% else %}
+                        <li><a href="{{ url_for('about') }}" class="text-muted text-decoration-none">About</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h6 style="color: var(--coffee-brown);">Contact</h6>
+                    <p class="text-muted small mb-1"><i class="fas fa-envelope me-2"></i>info@willscoffee.com</p>
+                    <p class="text-muted small mb-1"><i class="fas fa-phone me-2"></i>(555) 123-4567</p>
+                    <p class="text-muted small mb-0"><i class="fas fa-map-marker-alt me-2"></i>123 Coffee Street</p>
+                </div>
+            </div>
+            <hr style="border-color: rgba(74, 44, 42, 0.2);">
+            <div class="text-center text-muted small">
+                <p class="mb-0">&copy; 2025 Will's Coffee Shop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -56,7 +56,7 @@ INSERT INTO menu_items (name, size, price, cost) VALUES
 
 -- Insert sample employees
 INSERT INTO employee (fname, lname, password, username) VALUES
-('Will', 'Nelson', 'hashed_password_1', 'willnelson'),
+('Admin', 'User', 'hashed_password_1', 'willnelson'),
 ('Emma', 'Davis', 'hashed_password_2', 'edavis'),
 ('Lucas', 'Anderson', 'hashed_password_3', 'landerson'),
 ('Olivia', 'Taylor', 'hashed_password_4', 'otaylor');
