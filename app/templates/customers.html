@@ -7,33 +7,60 @@
         Add New Customer
     </button>
 
-    <!-- Table displaying all customers -->
-    <table class="table table-striped mt-4">
-        <thead>
-            <tr>
-                <th>Customer ID</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for customer in all_customers %}
-            <tr>
-                <td>{{ customer.customer_id }}</td>
-                <td>{{ customer.name }}</td>
-                <td>{{ customer.phone }}</td>
-                <td>{{ customer.email }}</td>
-                <td>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editCustomerModal{{ customer.customer_id }}">
-                        Edit
-                    </button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCustomerModal{{ customer.customer_id }}">
-                        Delete
-                    </button>
-                </td>
-            </tr>
+    <!-- Desktop Table View -->
+    <div class="d-none d-md-block">
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Customer ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in all_customers %}
+                <tr>
+                    <td>{{ customer.customer_id }}</td>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.phone }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editCustomerModal{{ customer.customer_id }}">
+                            Edit
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCustomerModal{{ customer.customer_id }}">
+                            Archive
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div class="d-md-none mt-4">
+        {% for customer in all_customers %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ customer.name }}</h5>
+                <p class="card-text mb-1"><strong>ID:</strong> {{ customer.customer_id }}</p>
+                <p class="card-text mb-1"><strong>Phone:</strong> {{ customer.phone }}</p>
+                <p class="card-text mb-3"><strong>Email:</strong> {{ customer.email }}</p>
+                <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editCustomerModal{{ customer.customer_id }}">
+                    <i class="fas fa-edit me-1"></i>Edit
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCustomerModal{{ customer.customer_id }}">
+                    <i class="fas fa-archive me-1"></i>Archive
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% for customer in all_customers %}
 
             <!-- Edit Customer Modal -->
             <div class="modal fade" id="editCustomerModal{{ customer.customer_id }}" tabindex="-1" aria-labelledby="editCustomerModalLabel{{ customer.customer_id }}" aria-hidden="true">
@@ -67,21 +94,21 @@
                 </div>
             </div>
 
-            <!-- Delete Customer Modal -->
+            <!-- Archive Customer Modal -->
             <div class="modal fade" id="deleteCustomerModal{{ customer.customer_id }}" tabindex="-1" aria-labelledby="deleteCustomerModalLabel{{ customer.customer_id }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="deleteCustomerModalLabel{{ customer.customer_id }}">Delete Customer</h5>
+                            <h5 class="modal-title" id="deleteCustomerModalLabel{{ customer.customer_id }}">Archive Customer</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to delete {{ customer.name }}?
+                            Are you sure you want to archive {{ customer.name }}? This will hide them from the active customer list, but their order history will be preserved.
                         </div>
                         <div class="modal-footer">
                             <form method="post" action="{{ url_for('customers.delete_customer', customer_id=customer.customer_id) }}">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger">Archive</button>
                             </form>
                         </div>
                     </div>

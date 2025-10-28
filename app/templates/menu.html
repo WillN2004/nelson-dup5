@@ -7,35 +7,62 @@
         Add New Menu Item
     </button>
 
-    <!-- Table displaying all menu items -->
-    <table class="table table-striped mt-4">
-        <thead>
-            <tr>
-                <th>Item ID</th>
-                <th>Name</th>
-                <th>Size</th>
-                <th>Price</th>
-                <th>Cost</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in all_menu_items %}
-            <tr>
-                <td>{{ item.item_id }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.size }}</td>
-                <td>${{ "%.2f"|format(item.price) }}</td>
-                <td>${{ "%.2f"|format(item.cost) }}</td>
-                <td>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editMenuModal{{ item.item_id }}">
-                        Edit
-                    </button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteMenuModal{{ item.item_id }}">
-                        Delete
-                    </button>
-                </td>
-            </tr>
+    <!-- Desktop Table View -->
+    <div class="d-none d-md-block">
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Item ID</th>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>Cost</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in all_menu_items %}
+                <tr>
+                    <td>{{ item.item_id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.size }}</td>
+                    <td>${{ "%.2f"|format(item.price) }}</td>
+                    <td>${{ "%.2f"|format(item.cost) }}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editMenuModal{{ item.item_id }}">
+                            Edit
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteMenuModal{{ item.item_id }}">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div class="d-md-none mt-4">
+        {% for item in all_menu_items %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ item.name }} <span class="badge bg-secondary">{{ item.size }}</span></h5>
+                <p class="card-text mb-1"><strong>ID:</strong> {{ item.item_id }}</p>
+                <p class="card-text mb-1"><strong>Price:</strong> ${{ "%.2f"|format(item.price) }}</p>
+                <p class="card-text mb-3"><strong>Cost:</strong> ${{ "%.2f"|format(item.cost) }}</p>
+                <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editMenuModal{{ item.item_id }}">
+                    <i class="fas fa-edit me-1"></i>Edit
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteMenuModal{{ item.item_id }}">
+                    <i class="fas fa-trash me-1"></i>Delete
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% for item in all_menu_items %}
 
             <!-- Edit Menu Item Modal -->
             <div class="modal fade" id="editMenuModal{{ item.item_id }}" tabindex="-1" aria-labelledby="editMenuModalLabel{{ item.item_id }}" aria-hidden="true">

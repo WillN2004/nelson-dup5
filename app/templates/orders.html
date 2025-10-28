@@ -7,49 +7,83 @@
         Create New Order
     </button>
 
-    <!-- Table displaying all orders -->
-    <table class="table table-striped mt-4">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Date</th>
-                <th>Total Items</th>
-                <th>Total</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for order in all_orders %}
-            {% set order_items = order_details[order.order_id] %}
-            {% set order_total = namespace(value=0) %}
-            {% set total_quantity = namespace(value=0) %}
-            {% for item in order_items %}
-                {% set item_total = item.price * item.quantity %}
-                {% set order_total.value = order_total.value + item_total %}
-                {% set total_quantity.value = total_quantity.value + item.quantity %}
-            {% endfor %}
-            <tr>
-                <td>{{ order.order_id }}</td>
-                <td>{{ order.customer_name }}</td>
-                <td>{{ order.date.strftime('%Y-%m-%d') if order.date else 'N/A' }}</td>
-                <td>{{ total_quantity.value }} item(s)</td>
-                <td><strong>${{ "%.2f"|format(order_total.value|float * 1.07) }}</strong></td>
-                <td>
-                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addItemModal{{ order.order_id }}">
-                        Add Item
-                    </button>
-                    <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewOrderModal{{ order.order_id }}">
-                        View Details
-                    </button>
-                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteOrderModal{{ order.order_id }}">
-                        Delete Order
-                    </button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <!-- Desktop Table View -->
+    <div class="d-none d-md-block">
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Total Items</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in all_orders %}
+                {% set order_items = order_details[order.order_id] %}
+                {% set order_total = namespace(value=0) %}
+                {% set total_quantity = namespace(value=0) %}
+                {% for item in order_items %}
+                    {% set item_total = item.price * item.quantity %}
+                    {% set order_total.value = order_total.value + item_total %}
+                    {% set total_quantity.value = total_quantity.value + item.quantity %}
+                {% endfor %}
+                <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.customer_name }}</td>
+                    <td>{{ order.date.strftime('%Y-%m-%d') if order.date else 'N/A' }}</td>
+                    <td>{{ total_quantity.value }} item(s)</td>
+                    <td><strong>${{ "%.2f"|format(order_total.value|float * 1.07) }}</strong></td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addItemModal{{ order.order_id }}">
+                            Add Item
+                        </button>
+                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewOrderModal{{ order.order_id }}">
+                            View Details
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteOrderModal{{ order.order_id }}">
+                            Delete Order
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div class="d-md-none mt-4">
+        {% for order in all_orders %}
+        {% set order_items = order_details[order.order_id] %}
+        {% set order_total = namespace(value=0) %}
+        {% set total_quantity = namespace(value=0) %}
+        {% for item in order_items %}
+            {% set item_total = item.price * item.quantity %}
+            {% set order_total.value = order_total.value + item_total %}
+            {% set total_quantity.value = total_quantity.value + item.quantity %}
+        {% endfor %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Order #{{ order.order_id }}</h5>
+                <p class="card-text mb-1"><strong>Customer:</strong> {{ order.customer_name }}</p>
+                <p class="card-text mb-1"><strong>Date:</strong> {{ order.date.strftime('%Y-%m-%d') if order.date else 'N/A' }}</p>
+                <p class="card-text mb-1"><strong>Items:</strong> {{ total_quantity.value }}</p>
+                <p class="card-text mb-3"><strong>Total:</strong> ${{ "%.2f"|format(order_total.value|float * 1.07) }}</p>
+                <button type="button" class="btn btn-success btn-sm me-1 mb-1" data-bs-toggle="modal" data-bs-target="#addItemModal{{ order.order_id }}">
+                    <i class="fas fa-plus me-1"></i>Add Item
+                </button>
+                <button type="button" class="btn btn-info btn-sm me-1 mb-1" data-bs-toggle="modal" data-bs-target="#viewOrderModal{{ order.order_id }}">
+                    <i class="fas fa-eye me-1"></i>Details
+                </button>
+                <button type="button" class="btn btn-danger btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#deleteOrderModal{{ order.order_id }}">
+                    <i class="fas fa-trash me-1"></i>Delete
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
 <!-- All Modals Below -->

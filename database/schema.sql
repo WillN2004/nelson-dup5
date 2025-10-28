@@ -6,7 +6,8 @@ CREATE TABLE customer (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     phone VARCHAR(20),
-    email VARCHAR(100)
+    email VARCHAR(100),
+    archived BOOLEAN DEFAULT FALSE
 );
 
 -- Create menu_items table

@@ -32,8 +32,8 @@ def show_orders():
     ''')
     all_orders = cursor.fetchall()
 
-    # Get all customers for dropdown
-    cursor.execute('SELECT customer_id, name FROM customer')
+    # Get all non-archived customers for dropdown
+    cursor.execute('SELECT customer_id, name FROM customer WHERE archived = FALSE')
     all_customers = cursor.fetchall()
 
     # Get order details for each order
